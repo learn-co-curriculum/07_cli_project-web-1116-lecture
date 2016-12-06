@@ -3,3 +3,4 @@ source "http://rubygems.org"
 
 gem "rest-client"
 gem "pry"
+gem 'json'

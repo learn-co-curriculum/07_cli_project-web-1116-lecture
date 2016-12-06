@@ -1,3 +1,3 @@
 require_relative '../config/environment'
 
-BookIt.new.call
+BookItCLI.new.call

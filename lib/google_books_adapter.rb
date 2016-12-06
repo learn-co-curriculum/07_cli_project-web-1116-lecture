@@ -1,33 +1,23 @@
 class GoogleBooksAdapter
   attr_reader :query
-
   BASE_URL = "https://www.googleapis.com/books/v1/volumes"
 
-  def fetch(input)
-    parse_query(input)
-    populate_books
+  def initialize(query)
+    @query = query
   end
 
-  private
+  def fetch_books
+    puts "Fetching all the books about #{query}"
+    # hit the google books API and get back some book data
 
-  def parse_query(input)
-    @query = input.gsub(' ', '+')
-  end
-
-  def populate_books
-    book_data.each do |book_data|
-      Book.new({
-        title: book_data["volumeInfo"]["title"],
-        authors: book_data["volumeInfo"]["authors"],
-        description: book_data["volumeInfo"]["description"]
-        })
+    response = RestClient.get("#{BASE_URL}?q=#{query}")
+    data = JSON.parse(response)
+    book_data = data["items"]
+    # iterate over this list of book data
+    book_data.each do |book|
+      # for each hash of book data, create a new instance of my book class
+      Book.new(book["volumeInfo"]["title"], book["volumeInfo"]["authors"], book["volumeInfo"]["description"])
     end
   end
-
-  def book_data
-    response = RestClient.get("#{BASE_URL}?q=#{query}")
-    JSON.parse(response)["items"]
-  end
-
 
 end
